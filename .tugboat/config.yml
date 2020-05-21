@@ -28,7 +28,8 @@ services:
                 - wp --allow-root --path="${DOCROOT}" config create --dbhost=mysql --dbname=tugboat --dbuser=tugboat --dbpass=tugboat --force
 
                 # Update permalinks to remove the index.php.
-                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%year%/%monthnum%/%day%/%postname%/
+                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
+                - wp --allow-root --path="${DOCROOT}" rewrite flush --hard
 
             update:
 
