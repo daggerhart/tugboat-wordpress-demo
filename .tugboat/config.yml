@@ -10,6 +10,9 @@ services:
                 - apt-get update
                 - apt-get install -y rsync
 
+                # Turn on URL rewriting.
+                - a2enmod rewrite
+
                 # Install PHP mysqli extension
                 - docker-php-ext-install mysqli
 
