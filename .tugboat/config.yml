@@ -51,7 +51,8 @@ services:
 
         visualdiffs:
             - /
-            - /2018/01/23/seagoing-tugboats-or-ocean-tugboats-fall-into-four-basic-categories/
+            - /about/
+            - /contact/
             - /2018/01/23/tugboat-engines-typically-produce-680-to-3400-hp/
 
     mysql:
