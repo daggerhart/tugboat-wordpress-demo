@@ -49,7 +49,7 @@ services:
                     wp --allow-root --path="${DOCROOT}" search-replace 'pr4-4gy7wboy23bse01egk4dkenyrtspulgl.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 fi
 
-        visualdiffs:
+        urls:
             - /
             - /about/
             - /contact/
