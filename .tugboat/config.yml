@@ -55,6 +55,9 @@ services:
             - /contact/
             - /tugboat-engines-typically-produce-680-to-3400-hp/
 
+        visualdiff:
+            threshold: 90
+
     mysql:
         image: tugboatqa/mysql:5
         commands:
