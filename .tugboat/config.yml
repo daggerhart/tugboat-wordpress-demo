@@ -50,6 +50,12 @@ services:
                     wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 fi
 
+            # Create a punchlist page when a new preview is online or cloned.
+            online:
+                - .tugboat/punchlist-page-create.sh
+            clone:
+                - .tugboat/punchlist-page-create.sh
+
         urls:
             - /
             - /about/
