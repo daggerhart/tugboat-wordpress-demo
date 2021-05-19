@@ -8,7 +8,7 @@ services:
 
                 # Install prerequisite packages
                 - apt-get update
-                - apt-get install -y rsync
+                - apt-get install -y rsync jq
 
                 # Turn on URL rewriting.
                 - a2enmod rewrite substitute
@@ -52,9 +52,9 @@ services:
 
             # Create a punchlist page when a new preview is online or cloned.
             online:
-                - .tugboat/punchlist-page-create.sh
+                - .tugboat/punchlist-page-create.sh | jq
             clone:
-                - .tugboat/punchlist-page-create.sh
+                - .tugboat/punchlist-page-create.sh | jq
 
         urls:
             - /
