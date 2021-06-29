@@ -35,8 +35,7 @@ services:
             update:
 
                 # Import uploads
-                - curl -L "https://www.dropbox.com/s/ufn5e3qe3sisdks/demo-wordpress-uploads.tar.gz?dl=0" > /tmp/uploads.tar.gz
-                - tar -C /tmp -zxf /tmp/uploads.tar.gz
+                - tar -C /tmp -zxf uploads.tar.gz
                 - rsync -av --delete /tmp/uploads/ "${TUGBOAT_ROOT}/docroot/wp-content/uploads/"
 
                 # Cleanup
@@ -50,10 +49,12 @@ services:
                     wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 fi
 
+            clone:
+              -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+              - .tugboat/punchlist-page-create.sh | jq
+
             # Create a punchlist page when a new preview is online or cloned.
             online:
-                - .tugboat/punchlist-page-create.sh | jq
-            clone:
                 - .tugboat/punchlist-page-create.sh | jq
 
         urls:
@@ -67,8 +68,7 @@ services:
 
     mysql:
         image: tugboatqa/mysql:5
+        checkout: true
         commands:
             update:
-                - curl -L "https://www.dropbox.com/s/sabj5vq711bhst2/demo-wordpress-database.sql.gz?dl=0" > /tmp/database.sql.gz
-                - zcat /tmp/database.sql.gz | mysql tugboat
-                - rm /tmp/database.sql.gz
+                - zcat database.sql.gz | mysql tugboat
