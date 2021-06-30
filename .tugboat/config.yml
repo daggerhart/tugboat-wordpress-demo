@@ -55,7 +55,7 @@ services:
 
             # Create a punchlist page when a new preview is online or cloned.
             online:
-                - .tugboat/punchlist-page-create.sh | jq
+                - .tugboat/punchlist-page-create.sh
 
         urls:
             - /
