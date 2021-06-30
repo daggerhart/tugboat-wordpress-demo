@@ -7,7 +7,8 @@ export payload=$(printf '{
   "default": false
 }' $TUGBOAT_PREVIEW_NAME $TUGBOAT_PREVIEW_REF $TUGBOAT_DEFAULT_SERVICE_URL)
 
-curl -H "Authorization: Bearer $PUNCHLIST_TOKEN" \
+curl --silent \
+  -H "Authorization: Bearer $PUNCHLIST_TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d "$payload" \
