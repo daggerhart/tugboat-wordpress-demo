@@ -51,11 +51,6 @@ services:
 
             clone:
               -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-              - '.tugboat/punchlist-page-create.sh | jq'
-
-            # Create a punchlist page when a new preview is online or cloned.
-            online:
-                - '.tugboat/punchlist-page-create.sh | jq'
 
         urls:
             - /
@@ -65,6 +60,19 @@ services:
 
         visualdiff:
             threshold: 90
+
+    punchlist:
+        image: q0rban/tugboat-punchlist
+        depends:
+            - php
+        aliases:
+            - punchlist
+        expose: 80
+        commands:
+            clone:
+                - punchlist-page-create
+            online:
+                - punchlist-page-create
 
     mysql:
         image: tugboatqa/mysql:5
