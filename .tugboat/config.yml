@@ -11,8 +11,7 @@ services:
                 - apt-get install -y rsync
 
                 # Turn on URL rewriting.
-                - a2enmod rewrite substitute
-                - cp .tugboat/vhost.conf /etc/apache2/sites-available/000-default.conf
+                - a2enmod rewrite
 
                 # Install PHP mysqli extension
                 - docker-php-ext-install mysqli
