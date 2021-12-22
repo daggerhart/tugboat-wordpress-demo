@@ -3,6 +3,12 @@ services:
         default: true
         image: q0rban/wp-proxy
         depends: php
+
+        urls:
+            - /
+            - /about/
+            - /contact/
+            - /tugboat-engines-typically-produce-680-to-3400-hp/
     php:
         checkout: true
         image: tugboatqa/php:7.3-apache
@@ -44,12 +50,6 @@ services:
                 # Cleanup
                 - apt-get clean
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-        urls:
-            - /
-            - /about/
-            - /contact/
-            - /tugboat-engines-typically-produce-680-to-3400-hp/
 
         visualdiff:
             threshold: 90
