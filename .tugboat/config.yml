@@ -41,10 +41,10 @@ services:
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
             build:
-                # Update permalinks to remove the index.php.
-                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
-                - wp --allow-root --path="${DOCROOT}" rewrite flush --hard
-                
+                # Update permalinks to remove the index.php.  These can't run until the database is imported.  How do we do that?
+#                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
+#                - wp --allow-root --path="${DOCROOT}" rewrite flush --hard
+
                 #if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
                 #    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 #else
