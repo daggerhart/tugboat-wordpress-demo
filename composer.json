@@ -26,6 +26,8 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "cd docroot; ln -sf ../wp-content ."
+        "post-install-cmd": [
+            "cd docroot; ln -sf ../wp-content .; ln -sf ../config/wp-config.php"
+        ]
     }
 }
