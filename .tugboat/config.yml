@@ -28,11 +28,11 @@ services:
                 - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
 
                 # Configure wordpress to work with tugboat
-                - wp --allow-root --path="${DOCROOT}/config" config create --dbhost=mysql --dbname=tugboat --dbuser=tugboat --dbpass=tugboat --force
+                - wp --allow-root --path="${DOCROOT}" config create --dbhost=mysql --dbname=tugboat --dbuser=tugboat --dbpass=tugboat --force
 
                 # Update permalinks to remove the index.php.
-                - wp --allow-root --path="${DOCROOT}/config" option set permalink_structure /%postname%/
-                - wp --allow-root --path="${DOCROOT}/config" rewrite flush --hard
+                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
+                - wp --allow-root --path="${DOCROOT}" rewrite flush --hard
 
             update:
 
@@ -46,13 +46,13 @@ services:
 
             build: |
                 if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
-                    wp --allow-root --path="${DOCROOT}/config" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 else
-                    wp --allow-root --path="${DOCROOT}/config" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                    wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 fi
 
             clone:
-              -  wp --allow-root --path="${DOCROOT}/config" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+              -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
 
         urls:
             - /
