@@ -1,7 +1,7 @@
 services:
     php:
         default: true
-        image: tugboatqa/php:7.3-apache
+        image: tugboatqa/php:8.1-apache
         depends: mysql
         commands:
             init:
@@ -13,6 +13,9 @@ services:
                 # Install PHP mysqli extension
                 - docker-php-ext-install mysqli
 
+                # Install Wordpress.
+                - composer install --optimize-autoloader
+
                 # Install wp-cli
                 - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                 - chmod +x wp-cli.phar
@@ -23,7 +26,12 @@ services:
 
                 # Configure wordpress to work with tugboat
                 - wp --allow-root --path="${DOCROOT}" config create --dbhost=mysql --dbname=tugboat --dbuser=tugboat --dbpass=tugboat --force
-
+                - echo "<?php define('WEB_ENV', 'tugboat');" > config/env-settings.php
+                - echo "<?php
+                        define('DB_NAME', 'tugboat');
+                        define('DB_USER', 'tugboat');
+                        define('DB_PASSWORD', 'tugboat');
+                        define('DB_HOST', 'mysql');" > config/wp-config.tugboat.php
             update:
 
                 # Import uploads
