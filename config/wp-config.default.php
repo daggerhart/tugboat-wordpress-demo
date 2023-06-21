@@ -1,6 +1,6 @@
 <?php
 /**
- * COPY THIS TO wp-config.WEB_ENV.php to match the environment settings in env-settings.php.  Do not commit that file to the repository.
+ * COPY THIS TO /config/wp-config.php or use the Wordpress plugin to create the file here. Do not commit that file to the repository.
  *
  * The base configuration for WordPress
  *

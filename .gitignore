@@ -13,7 +13,4 @@ docroot
 vendor
 
 # Ignore environment specific configuration.
-config/env-settings.php
-config/wp-config.*
-!config/wp-config.php
-!config/wp-config.default.php
+config/wp-config.php
