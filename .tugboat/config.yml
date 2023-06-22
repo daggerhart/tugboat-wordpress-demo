@@ -30,6 +30,10 @@ services:
                 # Configure wordpress to work with tugboat
                 - wp --allow-root --path="${DOCROOT}" config create --dbhost=mysql --dbname=tugboat --dbuser=tugboat --dbpass=tugboat --force
 
+                # Update permalinks to remove the index.php.  These can't run until the database is imported.  How do we do that?
+                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
+                - wp --allow-root --path="${DOCROOT}" rewrite flush --hard
+
             update:
                 # Import uploads
                 - tar -C /tmp -zxf uploads.tar.gz
@@ -39,16 +43,12 @@ services:
                 - apt-get clean
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-            build:
-                # Update permalinks to remove the index.php.  These can't run until the database is imported.  How do we do that?
-                #- wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
-                #- wp --allow-root --path="${DOCROOT}" rewrite flush --hard
-
-                #if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
-                #    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-                #else
-                #    wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-                #fi
+            build: |
+                if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
+                    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                else
+                    wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                fi
 
             clone:
               -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
