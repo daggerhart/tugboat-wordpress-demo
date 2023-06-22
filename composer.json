@@ -27,7 +27,8 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "cd docroot; ln -sf ../wp-content .; ln -sf ../config/wp-config.php"
+            "cp config/wp-config.default.php wp-config.php",
+            "cd docroot; ln -sf ../wp-content .; ln -sf ../wp-config.php"
         ]
     }
 }

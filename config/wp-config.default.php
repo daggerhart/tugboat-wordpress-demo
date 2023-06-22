@@ -1,7 +1,5 @@
 <?php
 /**
- * COPY THIS TO /config/wp-config.php or use the Wordpress plugin to create the file here. Do not commit that file to the repository.
- *
  * The base configuration for WordPress
  *
  * The wp-config.php creation script uses this file during the installation.

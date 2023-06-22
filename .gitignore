@@ -5,12 +5,9 @@
 .vagrant
 .idea
 
-# Local Vagrant config file
-/Vagrant.local.yml
-
 # Ignore Wordpress core and Composer's vendor dir.
 docroot
 vendor
 
 # Ignore environment specific configuration.
-config/wp-config.php
+wp-config.php
