@@ -64,6 +64,7 @@ services:
 
     mysql:
         image: tugboatqa/mysql:5
+        checkout: true
         commands:
             update:
                 - zcat database.sql.gz | mysql tugboat
