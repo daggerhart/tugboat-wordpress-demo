@@ -18,16 +18,17 @@ services:
                 # Install Wordpress.
                 - composer install --optimize-autoloader
 
-                # Install wp-cli
+                # Link the docroot.  This should match where composer has installed Wordpress core.
+                - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
+
+                # Link the config file and content folder from the repo into Wordpress core.
+                - rm -rf ${TUGBOAT_ROOT}/wp-config.php; rm -rf ${DOCROOT}/wp-config.php; cp ${TUGBOAT_ROOT}/.tugboat/wp-config.tugboat.php ${TUGBOAT_ROOT}/wp-config.php
+                - ln -snf ${TUGBOAT_ROOT}/wp-content ${DOCROOT}/; ln -snf ${TUGBOAT_ROOT}/wp-config.php ${DOCROOT}/wp-config.php
+
+                # Install wp-cli.
                 - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                 - chmod +x wp-cli.phar
                 - mv wp-cli.phar /usr/local/bin/wp
-
-                # Link the docroot
-                - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
-
-                # Configure wordpress to work with tugboat
-                - wp --allow-root --path="${DOCROOT}" config create --dbhost=mysql --dbname=tugboat --dbuser=tugboat --dbpass=tugboat --force
 
                 # Update permalinks to remove the index.php.  These can't run until the database is imported.  How do we do that?
                 - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
