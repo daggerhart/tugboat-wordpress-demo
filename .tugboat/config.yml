@@ -21,9 +21,9 @@ services:
                 # Link the docroot.  This should match where composer has installed Wordpress core.
                 - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
 
-                # Link the config file and content folder from the repo into Wordpress core.
+                # Copy and link the Tugboat config file into the Wordpress core directory.
                 - rm -rf ${TUGBOAT_ROOT}/wp-config.php; rm -rf ${DOCROOT}/wp-config.php; cp ${TUGBOAT_ROOT}/.tugboat/wp-config.tugboat.php ${TUGBOAT_ROOT}/wp-config.php
-                - ln -snf ${TUGBOAT_ROOT}/wp-content ${DOCROOT}/; ln -snf ${TUGBOAT_ROOT}/wp-config.php ${DOCROOT}/wp-config.php
+                - ln -snf ${TUGBOAT_ROOT}/wp-config.php ${DOCROOT}/wp-config.php
 
                 # Install wp-cli.
                 - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar

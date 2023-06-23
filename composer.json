@@ -24,5 +24,10 @@
         "allow-plugins": {
             "roots/wordpress-core-installer": true
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "cd docroot; ln -sf ../wp-content .; ln -sf ../wp-config.php"
+        ]
     }
 }
