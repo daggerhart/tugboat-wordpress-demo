@@ -68,8 +68,6 @@ services:
 
             # These commands rewrite the hostname set in the database to use the current preview hostname.
             build:
-                - echo $DOCROOT
-                - echo $TUGBOAT_SERVICE_URL_HOST
                 - wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 # wp --allow-root --path=/var/lib/tugboat/docroot search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' 'pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com' --skip-columns=guid
 
