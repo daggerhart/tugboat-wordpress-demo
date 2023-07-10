@@ -66,20 +66,6 @@ services:
                 - apt-get clean
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-            # Commands that build the site. When a Preview is built from a
-            # Base Preview, the build workflow starts here, skipping the init
-            # and update steps, because the results of those are inherited
-            # from the base preview.
-#            build: |
-#                if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
-#                    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-#                else
-#                    wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-#                fi
-#
-#            clone:
-#              -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-
         urls:
             - /
             - /about/
