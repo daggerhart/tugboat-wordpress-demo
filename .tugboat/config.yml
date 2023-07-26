@@ -17,6 +17,10 @@ services:
         commands:
             # Commands that set up the basic preview infrastructure
             init:
+                # Set some helpful aliases for the cli and add the composer bin to the PATH.
+                - echo "alias ll='ls -la'" >> /root/.bashrc
+                - echo "export PATH=$PATH:${TUGBOAT_ROOT}/vendor/bin" >> /root/.bashrc
+
                 # Install prerequisite packages
                 - apt-get update
                 - apt-get install -y rsync libzip-dev
@@ -37,10 +41,10 @@ services:
                 - chmod +x wp-cli.phar
                 - mv wp-cli.phar /usr/local/bin/wp
                 -
-                # Install Wordpress.
+                # Install WordPress.
                 - composer install --optimize-autoloader
 
-                # OPTION 2: Wordpress Core lives in a subdirectory (in this example, 'docroot').
+                # OPTION 2: WordPress Core lives in a subdirectory (in this example, 'docroot').
                 - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
 
                 # Set the wp-config.php file with the one you defined for Tugboat.
