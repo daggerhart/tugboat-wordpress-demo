@@ -83,8 +83,8 @@ services:
                     wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                     echo "Replacing ${TUGBOAT_BASE_PREVIEW_URL_HOST} with ${TUGBOAT_SERVICE_URL_HOST}"
                 else
-                    wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-                    echo "Replacing main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa with ${TUGBOAT_SERVICE_URL_HOST}"
+                    wp --allow-root --path="${DOCROOT}" search-replace 'pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                    echo "Replacing pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com with ${TUGBOAT_SERVICE_URL_HOST}"
                 fi
 
             clone:
