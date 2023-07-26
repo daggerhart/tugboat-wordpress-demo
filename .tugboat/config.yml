@@ -67,12 +67,24 @@ services:
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
             # These commands rewrite the hostname set in the database to use the current preview hostname.
-            build:
-                - wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+            #build:
+                #- wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
                 # wp --allow-root --path=/var/lib/tugboat/docroot search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' 'pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com' --skip-columns=guid
 
+            # If this preview was built from a base preview, then the base preview's URLs will be set in the database,
+            # so we want to rewrite the base preview's URL to this preview's.  However, if this preview does NOT have a
+            # base preview, then the original URL from the database export will need to be rewritten.
+            build: |
+                if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
+                    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                    echo "Replacing ${TUGBOAT_BASE_PREVIEW_URL_HOST} with ${TUGBOAT_SERVICE_URL_HOST}"
+                else
+                    wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+                    echo "Replacing main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa with ${TUGBOAT_SERVICE_URL_HOST}"
+                fi
+
             clone:
-                - wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+            -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
 
         urls:
             - /
