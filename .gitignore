@@ -6,7 +6,8 @@
 .idea
 
 # Ignore Wordpress core and Composer's vendor dir.
-docroot
+docroot/*
+!docroot/.htaccess
 vendor
 
 # Ignore environment specific configuration.
