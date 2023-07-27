@@ -40,16 +40,17 @@ services:
                 - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                 - chmod +x wp-cli.phar
                 - mv wp-cli.phar /usr/local/bin/wp
-                -
+
                 # Install WordPress.
                 - composer install --optimize-autoloader
 
                 # OPTION 2: WordPress Core lives in a subdirectory (in this example, 'docroot').
                 - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
 
-                # Set the wp-config.php file with the one you defined for Tugboat.
+                # Set the wp-config.php and .htaccess files with the one you defined for Tugboat.
                 - rm -rf ${DOCROOT}/wp-config.php
                 - cp ${TUGBOAT_ROOT}/.tugboat/wp-config.tugboat.php ${DOCROOT}/wp-config.php
+                - cp ${TUGBOAT_ROOT}/.tugboat/.htaccess ${DOCROOT}/.htaccess
 
                 # Update permalinks to remove the index.php.
                 - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
