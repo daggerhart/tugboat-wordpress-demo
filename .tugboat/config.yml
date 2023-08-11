@@ -13,6 +13,14 @@ services:
         # Wait until the mysql service is done building
         depends: mysql
 
+        # Tugboat's visual regression testing configuration.
+        urls:
+            - /
+            - /sample-page/
+
+        visualdiff:
+            threshold: 90
+
         # A set of commands to run while building this service
         commands:
             # Commands that set up the basic preview infrastructure
@@ -26,7 +34,7 @@ services:
                 - apt-get install -y rsync libzip-dev
 
                 # Turn on URL rewriting.
-                - a2enmod rewrite headers
+                - a2enmod auth_basic expires headers rewrite
 
                 # Install imagick
                 - apt-get install -y libmagickwand-dev
@@ -36,11 +44,6 @@ services:
                 # Install the PHP extensions
                 - docker-php-ext-install mysqli exif zip
 
-                # Install wp-cli
-                - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-                - chmod +x wp-cli.phar
-                - mv wp-cli.phar /usr/local/bin/wp
-
                 # Install WordPress.
                 - composer install --optimize-autoloader
 
@@ -48,21 +51,54 @@ services:
                 - ln -snf "${TUGBOAT_ROOT}/docroot" "${DOCROOT}"
 
                 # Set the wp-config.php and .htaccess files with the one you defined for Tugboat.
-                - rm -rf ${DOCROOT}/wp-config.php
-                - cp ${TUGBOAT_ROOT}/.tugboat/wp-config.tugboat.php ${DOCROOT}/wp-config.php
+                - cp ${TUGBOAT_ROOT}/.tugboat/wp-config.tugboat.php ${DOCROOT}/wp-config.local.php
                 - cp ${TUGBOAT_ROOT}/.tugboat/.htaccess ${DOCROOT}/.htaccess
 
-                # Update permalinks to remove the index.php.
-                - wp --allow-root --path="${DOCROOT}" option set permalink_structure /%postname%/
-                - wp --allow-root --path="${DOCROOT}" rewrite flush --hard
 
             # Phase 2 (update): Import files, database, or any other assets that your
             # website needs to run.
             # When you refresh a Tugboat Preview, the process starts here, skipping `init`.
             update:
-                # Import uploads
-                - tar -C /tmp -zxf uploads.tar.gz
-                - rsync -avz --delete /tmp/uploads/ "${TUGBOAT_ROOT}/docroot/wp-content/uploads/"
+                ################################################
+                # Import WordPress database and files (uploads).
+                #
+                # This example shows creating a fresh installation.
+                # Below are more examples for importing database and files remotely.
+                - |
+                    wp --allow-root core install \
+                    --url="https://${TUGBOAT_SERVICE_URL_HOST}" \
+                    --title="Tugboat Demo" \
+                    --admin_user="tugboatadmin" \
+                    --admin_password="tugboatdemo" \
+                    --admin_email="tugboat@example.com" \
+                    --skip-email
+                - wp --allow-root theme activate kadence
+                - wp --allow-root option set permalink_structure /%postname%/
+                - wp --allow-root cache flush
+
+                ##
+                # Example: Import production's database into Tugboat (using wp-cli alias @production).
+                #
+                #- wp --allow-root @production  db export - > prod.sql
+                #- wp --allow-root db import prod.sql && rm prod.sql
+                #- wp search-replace 'www.example.com' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
+
+                ##
+                # Example: Pull files from production (using rsync and details similar to our wp cli alias).
+                #
+                #- rsync \
+                #  --archive \
+                #  --verbose \
+                #  # Change SSH Port here if required.
+                #  -e "ssh -p 22 -o ConnectTimeout=120" \
+                #  # Modify this line to exclude some folders: https://linuxize.com/post/how-to-exclude-files-and-directories-with-rsync/#exclude-multiple-files-or-directories
+                #  --exclude={'*.zip','*.gz', '*.tgz'} \
+                #  # SSH connection and path details.
+                #  example@example.com:/var/www/html/docroot/wp-content/uploads/ \
+                #  # Where to place the files locally.
+                #  "${DOCROOT}/wp-content/uploads"
+
+                # Fix file ownership and harden permissions.
                 - chgrp -R www-data "${DOCROOT}/wp-content/uploads"
                 - find "${DOCROOT}/wp-content/uploads" -type d -exec chmod 2775 {} \;
                 - find "${DOCROOT}/wp-content/uploads" -type f -exec chmod 0664 {} \;
@@ -71,34 +107,12 @@ services:
                 - apt-get clean
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-            # These commands rewrite the hostname set in the database to use the current preview hostname.
-            #build:
-                #- wp --allow-root --path="${DOCROOT}" search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-                # wp --allow-root --path=/var/lib/tugboat/docroot search-replace 'main-hbpfbyk632i25rgdo9caeoo9oxs4mrtd.tugboat.qa' 'pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com' --skip-columns=guid
-
             # If this preview was built from a base preview, then the base preview's URLs will be set in the database,
             # so we want to rewrite the base preview's URL to this preview's.  However, if this preview does NOT have a
             # base preview, then the original URL from the database export will need to be rewritten.
-            build: |
-                if [ "x${TUGBOAT_BASE_PREVIEW}" != "x" ]; then
-                    wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-                    echo "Replacing ${TUGBOAT_BASE_PREVIEW_URL_HOST} with ${TUGBOAT_SERVICE_URL_HOST}"
-                else
-                    wp --allow-root --path="${DOCROOT}" search-replace 'pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-                    echo "Replacing pr78-vvg1syntykx8rfmnpy8dpo6hgjxvxiic.tugboatqa.com with ${TUGBOAT_SERVICE_URL_HOST}"
-                fi
+            build: []
 
-            clone:
-                -  wp --allow-root --path="${DOCROOT}" search-replace "${TUGBOAT_BASE_PREVIEW_URL_HOST}" "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
-
-        urls:
-            - /
-            - /about/
-            - /contact/
-            - /tugboat-engines-typically-produce-680-to-3400-hp/
-
-        visualdiff:
-            threshold: 90
+            clone: []
 
     # What to call the service hosting MySQL. This name also acts as the
     # hostname to access the service by from the php service.
@@ -106,5 +120,4 @@ services:
         image: tugboatqa/mysql:5-debian
         checkout: true
         commands:
-            update:
-                - zcat database.sql.gz | mysql tugboat
+            update: []
