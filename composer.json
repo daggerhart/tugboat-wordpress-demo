@@ -24,7 +24,8 @@
         "cweagans/composer-patches": "^1.7",
         "roots/wordpress": "^6.3",
         "wpackagist-plugin/advanced-custom-fields": "^6.2",
-        "wpackagist-theme/kadence": "^1.1"
+        "wpackagist-theme/kadence": "^1.1",
+        "wp-cli/wp-cli-bundle": "^2.8"
     },
     "extra": {
         "wordpress-install-dir": "docroot/wp",
