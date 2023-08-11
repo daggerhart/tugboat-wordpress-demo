@@ -59,6 +59,12 @@ services:
             # website needs to run.
             # When you refresh a Tugboat Preview, the process starts here, skipping `init`.
             update:
+                # Ensure our private SSH key is in place so that we can connect to remote services.
+                # Note: This assumes you have added your private key as a Tugboat environment variable for this project.
+                #       In this example, that environment variable is named "MY_PRODUCTION_SSH_KEY"
+                - echo "${MY_PRODUCTION_SSH_KEY}" > ~/.ssh/production_ssh_key
+                - chmod 600 ~/.ssh/production_ssh_key
+
                 ################################################
                 # Import WordPress database and files (uploads).
                 #
@@ -85,13 +91,15 @@ services:
 
                 ##
                 # Example: Pull files from production (using rsync and details similar to our wp cli alias).
+                # Note: Using this approach will require adding a Private SSH key as an environment variable in Tugboat.
                 #
                 #- rsync \
                 #  --archive \
                 #  --verbose \
                 #  # Change SSH Port here if required.
                 #  -e "ssh -p 22 -o ConnectTimeout=120" \
-                #  # Modify this line to exclude some folders: https://linuxize.com/post/how-to-exclude-files-and-directories-with-rsync/#exclude-multiple-files-or-directories
+                #  # Modify this line to exclude some folders.
+                #  # https://linuxize.com/post/how-to-exclude-files-and-directories-with-rsync/#exclude-multiple-files-or-directories
                 #  --exclude={'*.zip','*.gz', '*.tgz'} \
                 #  # SSH connection and path details.
                 #  example@example.com:/var/www/html/docroot/wp-content/uploads/ \
@@ -107,9 +115,6 @@ services:
                 - apt-get clean
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-            # If this preview was built from a base preview, then the base preview's URLs will be set in the database,
-            # so we want to rewrite the base preview's URL to this preview's.  However, if this preview does NOT have a
-            # base preview, then the original URL from the database export will need to be rewritten.
             build: []
 
             clone: []
