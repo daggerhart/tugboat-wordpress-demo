@@ -89,8 +89,10 @@ define( 'WP_DEBUG', false );
 
 /** Configure WordPress to know its own URL. Can be overridden in wp-config.local.php. */
 if ( !defined('WP_HOME') ) {
-	define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] );
-	define( 'WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST'] . '/wp' );
+	$host = $_SERVER['HTTP_HOST'] ?? 'www.example.com';
+	define( 'WP_HOME', 'https://' . $host );
+	define( 'WP_SITEURL', 'https://' . $host . '/wp' );
+	unset($host);
 }
 
 /** Configure WordPress to work in a subdirectory. */
