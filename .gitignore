@@ -22,6 +22,9 @@ vendor
 /docroot/wp-content/themes/*
 
 # Track our custom functionality
+!/docroot/index.php
+!/docroot/wp-config.php
+!/docroot/wp-config.local-example.php
 !/docroot/wp-content/plugins/my-custom-plugin/
 !/docroot/wp-content/themes/my-custom-theme/
 
