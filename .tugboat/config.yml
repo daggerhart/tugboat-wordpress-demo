@@ -149,6 +149,9 @@ services:
                 #
                 - wp search-replace 'www.example.com' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
 
+                # Flush WordPress Cache
+                - wp cache flush
+
                 # Cleanup
                 - apt-get clean
                 - rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
