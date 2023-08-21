@@ -13,11 +13,13 @@ services:
         # Wait until the mysql service is done building
         depends: mysql
 
-        # Tugboat's visual regression testing configuration.
+        # Tugboat's visual regression testing configuration; URLs to be tested.
         urls:
             - /
             - /sample-page/
+            - /tugboat-engines-typically-produce-680-to-3400-hp/
 
+        # Visual regression testing configuration; success threshold.
         visualdiff:
             threshold: 90
 
