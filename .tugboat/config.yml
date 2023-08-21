@@ -142,7 +142,10 @@ services:
 
                 ##
                 # (Optional) After database import, replace the site's domain throughout the database.
-                # Whether you need this step depends on whether WordPress is saving its domain to the database.
+                # Notes:
+                #   * Whether you need this step depends on whether WordPress is saving its domain to the database.
+                #   * If you are importing the database on the mysql service instead of this php service, you'll
+                #     need to run the search-replace command here on the php service, where the wp-cli is available.
                 #
                 - wp search-replace 'www.example.com' "${TUGBOAT_SERVICE_URL_HOST}" --skip-columns=guid
 
