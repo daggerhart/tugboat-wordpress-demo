@@ -5,9 +5,6 @@
 .vagrant
 .idea
 
-# Ignore environment specific configuration.
-docroot/wp-config.php
-
 # Ignore Wordpress core, contrib projects, and Composer's vendor dir.
 vendor
 !/docroot
