@@ -123,22 +123,33 @@ services:
                 # (Optional) Import WordPress database with the wp-cli.
                 ##################################
                 # If we preferred to use the wp-cli to import the database, we would do it here.
-                # Note: This also requires a Private SSH key has been placed on the Tugboat instance.
-                #       See the "Import files" example that uses rsync over SSH.
 
                 ##
                 # Import WordPress database example 1:
-                # Using wp-cli and the alias @production, found in our wp-cli.yml file.
+                # The backup file is in the repository and already on Tugboat.
                 #
-                #- wp --allow-root @production db export - > prod.sql
-                #- wp --allow-root db import prod.sql && rm prod.sql
+                #- gunzip -c database.sql.gz > database.sql
+                #- wp --allow-root db import database.sql
+                #- rm database.sql
 
                 ##
                 # Import WordPress database example 2:
+                # Using wp-cli and the alias @production, found in our wp-cli.yml file.
+                #
+                # Note: This also requires a Private SSH key has been placed on the Tugboat instance.
+                #       See the "Import files" example that uses rsync over SSH.
+                #
+                #- wp --allow-root @production db export - > prod.sql
+                #- wp --allow-root db import prod.sql
+                #- rm prod.sql
+
+                ##
+                # Import WordPress database example 3:
                 # Using wp-cli without an alias.
                 #
                 #- wp --allow-root --ssh=example@www.example.com:22/var/www/html/docroot/wp  db export - > prod.sql
-                #- wp --allow-root db import prod.sql && rm prod.sql
+                #- wp --allow-root db import prod.sql
+                #- rm prod.sql
 
                 ##
                 # (Optional) After database import, replace the site's domain throughout the database.
